@@ -129,7 +129,7 @@ public class App {
         typewriter("Despite that you pulled yourself together. You got up.\n");
     }
 
-    static void moveForward(Scanner scanner, int stepCount, String message) { //boolean footstepsbehind
+    static void moveForward(Scanner scanner, int stepCount, String message) { // boolean footstepsbehind
         int steps = 0;
         while (steps != stepCount) {
             String input = scanner.nextLine();
@@ -137,7 +137,7 @@ public class App {
                 player("footstep2.wav", -5f, false);
                 steps++;
                 y++;
-            } else //if footstepsbehind {wait 500 then footstep2big.wav}
+            } else // if footstepsbehind {wait 500 then footstep2big.wav}
                 System.out.println(message);
         }
     }
@@ -166,6 +166,7 @@ public class App {
 
                 Game = false;
                 deads = true;
+                break;
             } else
                 System.out.println(message);
         }
@@ -214,22 +215,35 @@ public class App {
         int hisx = x, hisy = y - 14;
 
         moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, false, vol++);
+
         hisy += 6;
         typewriter("That was not your footstep.\n");
         System.out.println("Press 'f' to look back\n");
 
         typewriter("Don't look back.\n");
 
+
         moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, true, vol++);
+        if (Game == false || deads == true) {
+            return;
+        }
+        
         typewriter("Keep walking\n");
         hisy += 6;
+        
 
         moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, true, vol++);
+        if (Game == false || deads == true) {
+            return;
+        }
         hisy += 6;
 
         typewriter("Keep walking\n");
 
         moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, true, vol++);
+        if (Game == false || deads == true) {
+            return;
+        }
         hisy += 6;
 
         System.out.println("STOP.");
@@ -470,6 +484,7 @@ public class App {
 
             if (steps == 1 && !printed) {
                 typewriter("Why am I back?");
+                System.out.println("Keep moving forward[w]\n");
                 printed = true;
             }
             String input = scanner.nextLine();
@@ -477,7 +492,7 @@ public class App {
                 player("footstep2.wav", -5f, false);
                 y++;
             } else
-                System.out.println("There's no turning back now, victory's up ahead");
+                System.out.println("There's no turning back now, victory's up ahead?");
 
             if (x > 10 || y > 19) {
                 x = 0;
@@ -513,7 +528,7 @@ public class App {
 
         jumpscare();
 
-        wait(2500);
+        wait(3100);
         Game = false;
         gameover = true;
         bad = true;
@@ -643,12 +658,12 @@ public class App {
         boolean scene = true;
         float vol = -10f;
 
-        while (scene) {
+        while (scene) { //The whole scene 3 lmao
 
             System.out.println("Walk [w]");
 
             String input = scanner.nextLine();
-            if (input.equals("w")) {
+            if (input.equals("w")) { // scene 3 movement
                 player("footstep2.wav", -5f, false);
                 System.out.println("Position: " + x + ", " + y);
                 x++;
@@ -665,15 +680,21 @@ public class App {
                 move++;
                 visited = false;
             } else if (input.equals("s")) {
+                if (move != 4) {
 
-                System.out.println("Position: " + x + ", " + y);
-                if (move == 1) {
-                    x = 0;
-                    y = 9;
-                    chapel(scanner);
-                    visited = false;
-                } else
-                    x--;
+                    typewriter("You moved back.\n");
+                    System.out.println("Position: " + x + ", " + y);
+                    if (move == 1) {
+                        x = 0;
+                        y = 9;
+                        chapel(scanner);
+                        visited = false;
+                    } else
+                        x--;
+
+                } else {
+                    System.out.println("He's Behind You... Keep moving forward.");
+                }
 
             } else if (input.equals("a")) {
 
@@ -687,7 +708,7 @@ public class App {
 
                 System.out.println("W for up, A for left, S for down, D for right");
 
-            if (move >= lines.length) {
+            if (move >= lines.length) { // if move is greater than lines, commence the stop and look back sequence
                 System.out.print("Type stop: ");
                 String ch;
                 do {
@@ -818,8 +839,8 @@ public class App {
         String ch;
         chapel = true;
 
-        if (pathattempt) {
-            typewriter("Will you go in or not?[y/y]: \n");
+        if (pathattempt) { //the sequence if the player has already attempted the path and returned to the chapel
+            typewriter("Will you go in or not?[y/y]: \n"); // just to mess with ya lol
             while (true) {
                 ch = scanner.nextLine();
                 if (ch.equals("y")) {
@@ -861,7 +882,7 @@ public class App {
             typewriter("Through the broken window, you noticed a lit candle.\n");
             typewriter(
                     "You also saw a pathway that goes straight east and might be the one the note is talking about.\n");
-            typewriter("Will you go in or not?[y/d to go the the path]: \n");
+            typewriter("Will you go in or not?[y/d to go the the path]: \n"); 
 
             while (true) {
                 ch = scanner.nextLine();
@@ -876,7 +897,7 @@ public class App {
                     scene3(scanner);
                     return false;
 
-                } else
+                }else 
                     System.out.println("y/d");
             }
         }
@@ -909,8 +930,6 @@ public class App {
 
         Scanner scanner = new Scanner(System.in);
         player("bg.wav", -5.0f, true);
-
-        // MOVEMENT //
 
         // OBJECTS //
 
@@ -990,7 +1009,7 @@ public class App {
                             inventory.add("diary");
 
                         if (Game && !scene6)
-                            // Get out chapel and transition to scene 6
+                            typewriter("You got out of the chapel and got on to the path.\n"); //maybe a choice to go back to his previous place then he dies there.
                             scenario6(scanner);
 
                         if (Game)
