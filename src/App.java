@@ -101,27 +101,6 @@ public class App {
         }
     }
 
-    static void playFootstep() {
-        player("footstep2.wav", -5f, false);
-    }
-
-    static int moveForward(Scanner scanner, int stepsToMove) {
-        int steps = 0;
-
-        while (steps < stepsToMove) {
-            String input = scanner.nextLine();
-            if ("w".equals(input)) {
-                playFootstep();
-                steps++;
-                y++;
-            } else {
-                System.out.println("There's no turning back now, victory's up ahead");
-            }
-        }
-
-        return steps;
-    }
-
     static void typewriter(String input) {
         for (int i = 0; i < input.length(); i++) {
             System.out.print(input.charAt(i));
@@ -150,8 +129,49 @@ public class App {
         typewriter("Despite that you pulled yourself together. You got up.\n");
     }
 
+    static void moveForward(Scanner scanner, int stepCount, String message) { //boolean footstepsbehind
+        int steps = 0;
+        while (steps != stepCount) {
+            String input = scanner.nextLine();
+            if (input.equals("w")) {
+                player("footstep2.wav", -5f, false);
+                steps++;
+                y++;
+            } else //if footstepsbehind {wait 500 then footstep2big.wav}
+                System.out.println(message);
+        }
+    }
+
+    static void moveForwardWithHim(Scanner scanner, int stepCount, String message, int hisx, int hisy,
+            boolean lookBack, float hisVol) {
+        Random random = new Random();
+        int steps = 0;
+
+        while (steps != stepCount) {
+            String input = scanner.nextLine();
+            if (input.equals("w")) {
+                player("footstep2.wav", -5f, false);
+                System.out.println("Position: " + x + ", " + y);
+                wait(500);
+                hisy += 2;
+                System.out.println("His Position: " + hisx + ", " + hisy);
+                player("footstep2big.wav", hisVol, false);
+                steps++;
+                y++;
+            } else if (lookBack && input.equals("f")) {
+                typewriter("I told you not to look back.\n");
+                wait(random.nextInt(1500));
+                jumpscare();
+                wait(2000);
+
+                Game = false;
+                deads = true;
+            } else
+                System.out.println(message);
+        }
+    }
+
     static void scenario6(Scanner scanner) {
-        Random random = RANDOM;
 
         try { // Try to stop music
             bgmusic.stop();
@@ -159,192 +179,59 @@ public class App {
             System.out.println("something went wrong" + e);
         }
 
-        int steps = 0;
         if (continuing)
             typewriter("You returned to the path.\n");
 
         typewriter("Continue walking[w]\n");
 
-        while (steps != 5) {
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                steps++;
-                y++;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
+        moveForward(scanner, 5, "There's no turning back now, the road is up ahead.");
 
         typewriter("The forest becomes weirdly familiar\n");
-        steps = 0;
 
         typewriter("Continue walking[w]\n");
 
-        while (steps != 3) {
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                steps++;
-                y++;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.");
 
         typewriter("That was the same rock\n");
-        steps = 0;
 
-        while (steps != 3) {
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                steps++;
-                y++;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.");
 
         typewriter("That was the same clearing\n");
-        steps = 0;
 
-        while (steps != 3) {
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                steps++;
-                y++;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.");
 
         typewriter("You remember seeing them all\n");
-        steps = 0;
 
-        while (steps != 3) {
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                steps++;
-                y++;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.");
 
         typewriter("But you don't remember when\n");
-        steps = 0;
+
         float vol = -10f;
         player("suspense.wav", 2f, true);
 
         typewriter("Continue walking[w]\n");
 
         int hisx = x, hisy = y - 14;
-        while (steps != 3) { // 1
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                System.out.println("Position: " + x + ", " + y);
-                wait(500);
-                hisy += 2;
-                System.out.println("His Position: " + hisx + ", " + hisy);
-                player("footstep2big.wav", vol, false);
-                vol += 1f;
-                steps++;
-                y++;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
 
+        moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, false, vol++);
+        hisy += 6;
         typewriter("That was not your footstep.\n");
-        steps = 0;
         System.out.println("Press 'f' to look back\n");
 
         typewriter("Don't look back.\n");
 
-        while (steps != 3) {// 2
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                System.out.println("Position: " + x + ", " + y);
-                wait(500);
-                hisy += 2;
-                System.out.println("His Position: " + hisx + ", " + hisy);
-                player("footstep2big.wav", vol, false);
-                vol += 1f;
-                steps++;
-                y++;
-            } else if (input.equals("f")) {
-                typewriter("I told you not to look back.\n");
-                wait(100);
-                int secs = random.nextInt(1500);
-                wait(secs);
-                jumpscare();
-                wait(2000);
+        moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, true, vol++);
+        typewriter("Keep walking\n");
+        hisy += 6;
 
-                Game = false;
-                deads = true;
-                return;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
+        moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, true, vol++);
+        hisy += 6;
 
         typewriter("Keep walking\n");
-        steps = 0;
 
-        while (steps != 3) {// 3
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                System.out.println("Position: " + x + ", " + y);
-                wait(500);
-                hisy += 2;
-                System.out.println("His Position: " + hisx + ", " + hisy);
-                player("footstep2big.wav", vol, false);
-                vol += 1f;
-                steps++;
-                y++;
-            } else if (input.equals("f")) {
-                typewriter("I told you not to look back.\n");
-                wait(100);
-                int secs = random.nextInt(1500);
-                wait(secs);
-                jumpscare();
-                wait(2000);
+        moveForwardWithHim(scanner, 3, "There's no turning back now, the road is up ahead.", hisx, hisy, true, vol++);
+        hisy += 6;
 
-                Game = false;
-                deads = true;
-                return;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
-
-        typewriter("Keep walking\n");
-        steps = 0;
-
-        while (steps != 3) {// 4
-            String input = scanner.nextLine();
-            if (input.equals("w")) {
-                player("footstep2.wav", -5f, false);
-                System.out.println("Position: " + x + ", " + y);
-                wait(500);
-                hisy += 2;
-                System.out.println("His Position: " + hisx + ", " + hisy);
-                player("footstep2big.wav", vol, false);
-                vol += 1f;
-                steps++;
-                y++;
-            } else if (input.equals("f")) {
-                typewriter("I told you not to look back.\n");
-                wait(100);
-                int secs = random.nextInt(1500);
-                wait(secs);
-                jumpscare();
-
-                wait(2000);
-                Game = false;
-                deads = true;
-                return;
-            } else
-                System.out.println("There's no turning back now, the road is up ahead.");
-        }
         System.out.println("STOP.");
         typewriter("He's right behind you.");
         wait(5000);
@@ -610,13 +497,15 @@ public class App {
         wait(1000);
         typewriter("Dont.. Move...\n");
 
-        int delay = 1450;
+        int delay = 900;
         float vol = -5f;
 
         while (hisy != 9) {
             System.out.println("His position: " + hisx + ", " + hisy);
             hisy++;
             player("footstep2big.wav", vol++, false);
+            if (delay < 150)
+                delay = 150;
             wait(delay);
             delay -= 150;
         }
