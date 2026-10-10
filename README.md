@@ -7,7 +7,17 @@ must have Java 8+ to run, if i am not mistaken lol.
 # requirements: 
 Java stuffs, and electricity (optional if on linux)
 
-# Instructions to run: 
-cd (where ever you have downloaded this file for example the "Downloads" folder)
-./hes_behind_you.sh or java -cp "file directory"/bin App
+# Instructions to run:
+Open your os terminal or the cmd 
+
+run these commands:
+cd (wherever you have downloaded this file for example the "Downloads" folder)
+java -jar hes-behind-you.jar
+
+it should hopefully run.
+
+i really hope it would run.
+
+have fun!
+
 
