@@ -1,18 +1,13 @@
-## Getting Started
+## A Java Text Based Game for my Midterms Exam.
+ 
+must have Java 8+ to run, if i am not mistaken lol. 
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+# But should hopefully run in the latest version of Java.
 
-## Folder Structure
+# requirements: 
+Java stuffs, and electricity (optional if on linux)
 
-The workspace contains two folders by default, where:
+# Instructions to run: 
+cd (where ever you have downloaded this file for example the "Downloads" folder)
+./hes_behind_you.sh or java -cp "file directory"/bin App
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).

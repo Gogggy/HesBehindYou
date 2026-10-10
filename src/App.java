@@ -1047,7 +1047,7 @@ public class App {
             typewriter("You see the altar, the candle, and an old diary.\n");
             typewriter("There is no name written on it...\n");
             typewriter("Opening the diary, the first page says...\n");
-            typewriter("I woke up alone in the forest, and it was dark...\n");
+            typewriter("\"I woke up alone in the forest, and it was dark...\" \n");
             typewriter("The hand writing is weirdly familiar\n");
             typewriter("Read it[1] or Keep it and leave[2] or leave it [3]?:\n");
 
@@ -1097,7 +1097,7 @@ public class App {
         typewriter("You see the altar, the candle, and an old diary.\n");
         typewriter("There is no name written on it...\n");
         typewriter("Opening the diary, the first page says...\n");
-        typewriter("I woke up in the forest, and it was dark...\n");
+        typewriter("\"I woke up alone in the forest, and it was dark...\" \n");
         typewriter("The hand writing is weirdly familiar\n");
         typewriter("Read it and leave[1] or Keep it and leave[2] or leave it[3]?:\n");
 
