@@ -55,7 +55,32 @@ public class App {
     public static boolean chapel = false;
     public static boolean gameover = false;
     public static boolean bad = false;
-    public static boolean good = true;
+    public static boolean good = false;
+    public static boolean secret = false;
+
+    // OBJECTS //
+
+    static HashMap<String, Objects> objects = new HashMap<>();
+
+    static Objects note = new Objects("Note",
+            "There was once a chapel straight ahead of here. It has a cemetery beside it.\n" +
+                    "It can be accessed from the road outside. It was a place of peace — a place of serenity.\n" +
+                    "Find the road. From there, you might be able to reach the nearest town.\n",
+            true, unlock, !interactable, false, false, visited, false);
+    
+
+    static Objects Chapel = new Objects("Chapel", "", false, unlock, interactable, false, false, visited, true);
+
+    static Objects road = new Objects("Road", "", false, unlock, interactable, false, false, visited, true);
+    
+
+    static {
+        objects.put("0,1", note);
+        objects.put("0,9", Chapel);
+        objects.put("-20,0", road); // remove x, any x
+    }
+
+
 
     static void jumpscare() {
         player("jumpscare.wav", 2f, false);
@@ -123,14 +148,22 @@ public class App {
         typewriter("And you see a crashed car with a note beside it.\n");
     }
 
-    static void moveForward(Scanner scanner, int stepCount, String message, boolean footstepsbehind) {
+    static void moveForward(Scanner scanner, int stepCount, String message, boolean footstepsbehind, boolean coordinate, boolean addtox) {
         int steps = 0;
         while (steps != stepCount) {
             String input = scanner.nextLine();
             if (input.equals("w")) {
                 player("footstep2.wav", -5f, false);
                 steps++;
-                y++;
+
+                if (addtox)
+                    x++;
+                else
+                    y++;
+
+                if (coordinate) {
+                    System.out.println("Position: " + x + ", " + y);
+                }
                 if (footstepsbehind) {
                     wait(500);
                     player("footstep2big.wav", -5f, false);
@@ -184,26 +217,26 @@ public class App {
 
         typewriter("Continue walking[w]\n");
 
-        moveForward(scanner, 5, "There's no turning back now, the road is up ahead.", false);
+        moveForward(scanner, 5, "There's no turning back now, the road is up ahead.", false, false, false);
 
         typewriter("The forest becomes weirdly familiar\n");
         wait(1000);
 
         System.out.println("Continue walking[w]\n");
 
-        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false);
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false, false, false);
 
         typewriter("That was the same rock\n");
 
-        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false);
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false, false, false);
 
         typewriter("That was the same clearing\n");
 
-        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false);
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false, false, false);
 
         typewriter("You remember seeing them all\n");
 
-        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false);
+        moveForward(scanner, 3, "There's no turning back now, the road is up ahead.", false, false, false);
 
         typewriter("But you don't remember when\n");
 
@@ -244,12 +277,12 @@ public class App {
         hisy += 6;
 
         System.out.println("STOP.");
-        typewriter("He's right behind you.");
-        wait(5000);
         bgmusic.stop();
+        typewriter("He's right behind you.\n");
+        wait(5000);
+        player("breathing.wav", -2f, true);
         typewriter("Silence engulfed the forest\n");
         typewriter("You hear your own breath\n");
-        player("breathing.wav", 2f, true);
         typewriter(".....");
         wait(3000);
         bgmusic.stop();
@@ -337,7 +370,6 @@ public class App {
         String ch;
 
         ch = "";
-        typewriter("You turned to the next page\n");
         for (int i = 0; i < diary.length; i++) {
 
             if (diary[i].equals("page")) {
@@ -348,6 +380,8 @@ public class App {
                         System.out.println("Press 'd' for next page");
 
                 } while (!ch.equals("d"));
+
+                typewriter("You turned to the next page\n");
 
             } else
                 typewriter(diary[i] + "\n");
@@ -417,7 +451,9 @@ public class App {
     static void scenario8Bad(Scanner scanner) {
         Random random = new Random();
         boolean scene = true;
-        bgmusic.stop();
+        if (bgmusic != null) {
+            bgmusic.stop();
+        }
 
         int hisx = 0, hisy = 0;
 
@@ -429,7 +465,7 @@ public class App {
         String[] lines = {
                 "The chapel is right in front of you....\n",
                 "What... the... hell... just... happened...\n",
-                "I were almost there.\n",
+                "I was almost there.\n",
                 "I can see the light.\n",
                 "I can almost smell the pollution.\n",
                 "Why are am I back here?\n",
@@ -481,8 +517,9 @@ public class App {
         while (steps != 2) {
 
             if (steps == 1 && !printed) {
-                typewriter("WHY AM I BACK??????");
-                System.out.println("Keep moving forward[w]\n");
+                typewriter("WHY AM I BACK??????\n");
+                wait(2000);
+                System.out.println("Keep moving forward[w]");
                 printed = true;
             }
             String input = scanner.nextLine();
@@ -501,9 +538,12 @@ public class App {
             }
         }
 
-        typewriter("WHAT IS HAPPENING TO ME????");
+        typewriter("WHAT IS HAPPENING TO ME????\n");
+
+        moveForward(scanner, 5, "There's no turning back now, victory's right up ahead", false, false, false);
 
         bgmusic.stop();
+        System.out.println("STOP");
         typewriter("He's....");
         wait(1000);
         typewriter("Behind you now....\n");
@@ -512,6 +552,7 @@ public class App {
         wait(1000);
         typewriter("Dont.. Move...\n");
 
+        wait(1000);
         int delay = 900;
         float vol = -5f;
 
@@ -536,6 +577,8 @@ public class App {
     }
 
     static void scenario8Good(Scanner scanner) {
+        Random random = new Random();
+
         bgmusic.stop();
         typewriter("But then, the world gets darker...\n");
         wait(2000);
@@ -592,6 +635,10 @@ public class App {
         wait(2000);
         typewriter("From the Industrial Revolution...\n");
 
+        wait(3000);
+
+        player("respawn.wav", 1f, false);
+
         wait(2000);
         gameover = true;
         good = true;
@@ -599,6 +646,9 @@ public class App {
     }
 
     static void scenario7(Scanner scanner) {
+        if (bgmusic != null) {
+            bgmusic.stop();
+        }
         player("hopeful.wav", 1f, true);
 
         int steps = 0;
@@ -681,14 +731,59 @@ public class App {
 
     }
 
-    // TODO secret ending.
+    static void SecretEnding(Scanner scanner) { // * or just make him return by death to spawn 
+        secret = true;
 
-    // TODO Go back to spawn.
-    static void GoBackToSpawn(Scanner scanner){
+        if (bgmusic != null) {
+            bgmusic.stop();
+        }
+        typewriter("You see something.\n");
+        typewriter("And its not soil.\n");
+        typewriter("A see of black. Its asphalt. It a road.");
+        typewriter("You don't know where it leads.\n");
+        typewriter("But you can see a small light in the distance.\n");
+        typewriter("A street light, with a silhouette under it.\n");
+        typewriter("The silhouette waves at you.\n");
+        System.out.println("Walk towards it[w]");
+
+        moveForward(scanner, 5, "Keep moving forward.", false, false, false);
+
+        player("car.wav", 0f, true);
+        typewriter("You hear a sound behind you.\n");
+        typewriter("And its getting louder.\n");
+        bgmusic.stop();
+        player("car.wav", 3f, true);
+        typewriter("Everything gets brighter, and brighter, and brighter.\n");
+        typewriter("And the man waves harder.\n");
+
+        System.out.println("Continue walking[w]");
+
+        moveForward(scanner, 3, "Keep moving forward.", false, false, false);
+        
+        bgmusic.stop();
+        player("car.wav", 6f, true);
+        System.out.println(".....");
+        player("horn.wav", 3f, false);
+        player("crash.wav", 5f, false);
+        bgmusic.stop();
+
+        wait(4000);
+
+        x = 0;
+        y = 0;
+
+        player("bg.wav", -5.0f, true);
+        spawn(scanner);
+        typewriter("Try walking forward with W\n");
+        return;
+    }
+
+    static void GoBackToSpawn(Scanner scanner) {
         Random random = new Random();
 
         int hisx = 0, hisy = 0;
         String ch;
+        bgmusic.stop();
 
         typewriter("You decided to go back to the car crash site.\n");
         System.out.println("Move forward[w]\n");
@@ -706,9 +801,9 @@ public class App {
         typewriter("You see a silhouette in the distance.\n");
         typewriter("But you were alone in this forest.\n");
 
-        while (hisy != 3){
+        while (hisy != 3) {
             System.out.println("His position: " + hisx + ", " + hisy);
-            hisy ++;
+            hisy++;
             player("footstep2big.wav", -5f, false);
             wait(1000);
         }
@@ -1023,27 +1118,46 @@ public class App {
         }
     }
 
-    public static void main(String[] args) {
+    static void YetAnotherSecretMethod(Scanner scanner){
+        wait(1000);
+        moveForward(scanner, 1, "Not there.", true, true, false);
 
+        Objects object = objects.get(Integer.toString(x) + "," + Integer.toString(y));
+
+        if (object != null) {
+            if (object.locked) {
+                System.out.println("Its locked");
+            }
+
+            if (object.visited) {
+                System.out.println("You already visited " + object.name + ", move on");
+            }
+
+            System.out.println("You found: " + object.name);
+            if (object.clues == true) {
+                typewriter(object.clue);
+                System.out.println("Continue walking forward");
+            }
+        }
+
+        moveForward(scanner, 7, "Not there.", true, true, false);
+
+        if (bgmusic != null) {
+            bgmusic.stop();
+        }
+        wait(2000);
+        typewriter("He's now behind you.");
+
+        wait(2000);
+
+        Game = false;
+        gameover = true;
+        secret = true;
+    }
+
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         player("bg.wav", -5.0f, true);
-
-        // OBJECTS //
-
-        HashMap<String, Objects> objects = new HashMap<>();
-
-        Objects note = new Objects("Note",
-                "There was once a chapel straight ahead of here. It has a cemetery beside it.\n" +
-                        "It can be accessed from the road outside. It was a place of peace — a place of serenity.\n" +
-                        "Find the road. From there, you might be able to reach the nearest town.\n",
-                true, unlock, !interactable, false, true, visited, false);
-        objects.put("0,1", note);
-
-        Objects chapel = new Objects("Chapel", "", false, unlock, interactable, false, false, visited, true);
-        objects.put("0,9", chapel);
-
-        Objects road = new Objects("Road", "", false, unlock, interactable, false, false, visited, true);
-        objects.put("-20,0", road);
 
         /* GAME LOOP */
 
@@ -1056,19 +1170,34 @@ public class App {
 
             String input = scanner.nextLine();
             if (input.equals("w")) {
+                if (secret) {
+                    wait(500);
+                    player("footstep2big.wav", 2f, false);
+                    YetAnotherSecretMethod(scanner);
+                    break;
+                }
 
                 y++;
                 visited = false;
             } else if (input.equals("s")) {
-
+                if (secret){
+                    System.out.println("Can't go there.");
+                    continue;
+            }               
                 y--;
                 visited = false;
             } else if (input.equals("a")) {
-
+                if (secret){
+                    System.out.println("Can't go there.");
+                    continue;
+            }
                 x--;
                 visited = false;
             } else if (input.equals("d")) {
-
+                if (secret){
+                    System.out.println("Can't go there.");
+                    continue;
+            }
                 x++;
                 visited = false;
             } else
@@ -1076,6 +1205,7 @@ public class App {
                 System.out.println("W for up, A for left, S for down, D for right");
 
             System.out.println("Position: " + Integer.toString(x) + ", " + Integer.toString(y));
+
 
             /* OBJECTS */
 
@@ -1104,23 +1234,26 @@ public class App {
                 if (object.scene) {
                     if (object.name.equals("Chapel")) {
                         hasdiary = chapel(scanner);
-                        chapel.visited = true;
-                        typewriter("You left the chapel.\n");
-                        typewriter("You can see the path straight ahead.[1]\n");
-                        typewriter("You can also see the car crash site.[2]\n");
-                        typewriter("Where will you go? [1/2]\n");
+                        Chapel.visited = true;
 
-                        String ch;
-                        do {
-                            ch = scanner.nextLine();
-                            if (ch.equals("2")){
-                                GoBackToSpawn(scanner);
-                                break;
-                            } else if (ch.equals("1")) {
-                                break;
-                            } else
-                                System.out.println("invalid");
-                        } while (!ch.equals("1"));
+                        if (!scene6){
+                            typewriter("You left the chapel.\n");
+                            typewriter("You can see the path straight ahead.[1]\n");
+                            typewriter("You can also see the car crash site.[2]\n");
+                            typewriter("Where will you go? [1/2]\n");
+                            String ch;
+                            do {
+                                ch = scanner.nextLine();
+                                if (ch.equals("2")) {
+                                    GoBackToSpawn(scanner);
+                                    break;
+                                } else if (ch.equals("1")) {
+                                    break;
+                                } else
+                                    System.out.println("invalid");
+                            } while (!ch.equals("1"));
+
+                        }
 
                         if (hasdiary)
                             inventory.add("diary");
@@ -1131,44 +1264,47 @@ public class App {
                         }
 
                         if (Game) {
+
                             scenario7(scanner);
                             break;
                         }
-
-                        if (object.name.equals("Road")) {
-                            typewriter("You reached the road.\n");
-                            // TODO Secret ending
-                        }
-
-                    } // if object null
-
+                    
+                    }
                 }
 
+            }
+
+            if (x == -20) {
+                SecretEnding(scanner);
             }
         }
 
         /* Death and ending */
-            if (deads) {
+        if (deads) {
+            player("static.wav", 2f, false);
+            typewriter("You...\n");
+            wait(1000);
+            typewriter("Died.\n");
+            wait(5000);
+
+            // return to check point??
+        } else if (gameover) {
+            if (bad) {
                 player("static.wav", 2f, false);
-                typewriter("You...\n");
-                wait(1000);
-                typewriter("Died.\n");
+                typewriter("You died....\n");
+                typewriter("You were too late.\n");
                 wait(5000);
-
-                // return to check point??
-            } else if (gameover) {
-                if (bad) {
-                    player("static.wav", 2f, false);
-                    typewriter("You died....\n");
-                    typewriter("You were too late.\n");
-                    wait(5000);
-                } else if (good) {
-                    player("victory?.wav", 4f, false);
-                    typewriter("You \"survived.\"\n");
-                    wait(5000);
-                }
+            } else if (good) {
+                player("victory?.wav", 4f, false);
+                typewriter("You survived.?\n");
+                wait(5000);
+            } else if (secret){
+                player("callofwitch.wav", 1f, false);
+                typewriter("......\n");
+                wait(8000);
             }
+        }
 
-            System.out.println("Gameover");
-    }
+        System.out.println("Gameover" + (good ? " - Good Ending" : bad ? " - Bad Ending" : secret ? " - Secret Ending (It can all happen again.)" : ""));
+    }                                    /* Prints if good ending *//* Print if bad ending *//* Print if secret ending */               
 }
